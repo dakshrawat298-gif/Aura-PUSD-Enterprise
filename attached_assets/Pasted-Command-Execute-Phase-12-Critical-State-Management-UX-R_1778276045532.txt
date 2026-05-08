@@ -1,0 +1,25 @@
+Command: Execute Phase 12 - Critical State Management & UX Reset.
+
+Our application logic has severe state management bugs after a successful transaction. The UI retains "ghost data" and the Creator submit button becomes unresponsive. Fix these issues in `app.js` and `index.html`.
+
+Task 1: Complete Enterprise State Reset
+When the user clicks "Start New Payroll Run":
+1. The header text must change back from "Payroll Complete" to "Batch Payroll".
+2. The entire employee list MUST be cleared. Do not just hide the success card; you must delete all dynamically generated employee input rows from the DOM.
+3. The UI must revert exactly to the state it was in before any CSV was uploaded (showing the "Import Payroll CSV" dropzone).
+4. The total disbursement amount and employee count must reset to 0.
+
+Task 2: Complete Creator State Reset & Fix Dead Button
+1. In `index.html`, add a new button in the Creator success view: `<button id="btnNewTip" class="btn btn-secondary" style="display: none; width: 100%; margin-top: 12px;">Send Another Tip</button>`.
+2. In `app.js`, when a tip transaction is successful, show this new button.
+3. Add an event listener to `btnNewTip`. When clicked:
+   - Hide the success banner and the "View on Solana Explorer" link.
+   - Hide `btnNewTip` and show the main "Send Anonymous Tip" button again.
+   - CRITICAL: Clear the values of the "Creator's Wallet" input, the "Tip Amount" input, and the "Message" textarea. Reset the quick-select pills so none are active.
+4. Ensure the main "Send Anonymous Tip" event listener is not being unbound or blocked after the first execution. It must work infinitely.
+
+Task 3: Visual Disabled State
+Update `style.css`. When any button (like `btnDisburse` or `btnSendTip`) has the `disabled` attribute, it must visually reflect this:
+`button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }`
+
+Output: Apply these critical logic fixes to `app.js` and `style.css`. Do not alter the Web3 transaction logic itself.

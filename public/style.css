@@ -990,6 +990,42 @@ body::before {
   color: #ede9fe;
 }
 
+/* ─── Creator Tip Explorer Link ──────────────── */
+.tip-explorer-link {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  margin-top: 10px;
+  letter-spacing: 0.1px;
+  transition: opacity 0.15s ease;
+}
+
+.tip-explorer-link:hover {
+  opacity: 0.75;
+}
+
+/* ─── Secondary Button Variant ───────────────── */
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 14px 20px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: -0.1px;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.1s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 /* ─── Global Button Tactile Feedback ─────────── */
 button {
   transition: transform 0.1s ease;
@@ -997,6 +1033,12 @@ button {
 
 button:active {
   transform: scale(0.97);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 /* ─── Scrollbar ──────────────────────────────── */

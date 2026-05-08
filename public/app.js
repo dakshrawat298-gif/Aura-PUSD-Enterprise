@@ -22,13 +22,14 @@
   const btnAddEmployee  = document.getElementById('btnAddEmployee');
 
   // Progress card
-  const cardProgress    = document.getElementById('cardProgress');
-  const progressList    = document.getElementById('progressList');
-  const progressBadge   = document.getElementById('progressBadge');
-  const postPayment     = document.getElementById('postPayment');
-  const successBanner   = document.getElementById('successBanner');
+  const cardProgress      = document.getElementById('cardProgress');
+  const progressList      = document.getElementById('progressList');
+  const progressBadge     = document.getElementById('progressBadge');
+  const progressCardTitle = document.getElementById('progressCardTitle');
+  const postPayment       = document.getElementById('postPayment');
+  const successBanner     = document.getElementById('successBanner');
   const btnDownloadReport = document.getElementById('btnDownloadReport');
-  const btnNewRun       = document.getElementById('btnNewRun');
+  const btnNewRun         = document.getElementById('btnNewRun');
 
   // Toggle
   const modeToggle      = document.getElementById('modeToggle');
@@ -39,13 +40,16 @@
   const cardBatchPayroll = document.getElementById('cardBatchPayroll');
 
   // Creator card
-  const cardCreator  = document.getElementById('cardCreator');
-  const creatorWallet= document.getElementById('creatorWallet');
-  const tipAmount    = document.getElementById('tipAmount');
-  const quickPills   = document.getElementById('quickPills');
-  const tipMessage   = document.getElementById('tipMessage');
-  const charCount    = document.getElementById('charCount');
-  const btnSendTip   = document.getElementById('btnSendTip');
+  const cardCreator       = document.getElementById('cardCreator');
+  const creatorWallet     = document.getElementById('creatorWallet');
+  const tipAmount         = document.getElementById('tipAmount');
+  const quickPills        = document.getElementById('quickPills');
+  const tipMessage        = document.getElementById('tipMessage');
+  const charCount         = document.getElementById('charCount');
+  const btnSendTip        = document.getElementById('btnSendTip');
+  const tipSuccessBanner  = document.getElementById('tipSuccessBanner');
+  const tipExplorerLink   = document.getElementById('tipExplorerLink');
+  const btnNewTip         = document.getElementById('btnNewTip');
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -527,6 +531,7 @@
   function onAllConfirmed(total) {
     showToast(`All ${total} payroll transactions confirmed!`, 'success');
 
+    progressCardTitle.textContent = 'Payroll Complete';
     successBanner.textContent = `All ${total} payroll transaction${total !== 1 ? 's' : ''} confirmed.`;
     postPayment.style.display  = '';
 
@@ -572,6 +577,9 @@
     cardBatchPayroll.style.display = '';
     postPayment.style.display      = 'none';
 
+    // Reset progress card title for next run
+    progressCardTitle.textContent = 'PAYROLL PROGRESS';
+
     // Clear progress list
     progressList.innerHTML = '';
     progressBadge.textContent = '0 / 0';
@@ -581,6 +589,15 @@
     state.employeeCount = 0;
     state.lastPayrollData = [];
     addEmployee();
+
+    // Reset summary totals
+    totalAmount.textContent = '0.00 PUSD';
+    employeeCountDisplay.textContent = '0';
+    recipientBadge.textContent = '0 Recipients';
+
+    // Remove any lingering upload feedback
+    const uploadFeedback = document.getElementById('uploadFeedback');
+    if (uploadFeedback) uploadFeedback.remove();
 
     // Reset disburse button
     resetDisburseButton();
@@ -680,7 +697,32 @@
     console.log('[Aura] Anonymous tip triggered.');
     console.log('[Aura] Tip payload:', payload);
 
-    // Phase 7 will wire this to the stealth address backend.
+    // Show tip success state
+    tipSuccessBanner.textContent = `Tip of ${amount} PUSD sent anonymously!`;
+    tipSuccessBanner.style.display = '';
+    tipExplorerLink.style.display  = '';
+    btnSendTip.style.display       = 'none';
+    btnNewTip.style.display        = '';
+  });
+
+  // ─── 9. Creator — Send Another Tip Reset ─────────────────────────────────────
+  btnNewTip.addEventListener('click', () => {
+    // Hide success state
+    tipSuccessBanner.style.display = 'none';
+    tipExplorerLink.style.display  = 'none';
+    btnNewTip.style.display        = 'none';
+
+    // Show send button again
+    btnSendTip.style.display = '';
+
+    // Clear all creator form fields
+    creatorWallet.value = '';
+    tipAmount.value     = '';
+    tipMessage.value    = '';
+    charCount.textContent = '0';
+
+    // Deselect all quick-pick pills
+    quickPills.querySelectorAll('.quick-pill').forEach(p => p.classList.remove('selected'));
   });
 
   // ─── Drag-over CSS injection ──────────────────────────────────────────────────

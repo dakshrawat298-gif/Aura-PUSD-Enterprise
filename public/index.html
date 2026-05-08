@@ -89,7 +89,7 @@
       <!-- Payroll Progress Card (hidden until disburse) -->
       <section class="card" id="cardProgress" style="display:none;">
         <div class="progress-card-header">
-          <span class="progress-card-title">PAYROLL PROGRESS</span>
+          <span class="progress-card-title" id="progressCardTitle">PAYROLL PROGRESS</span>
           <span class="progress-card-badge" id="progressBadge">0 / 0</span>
         </div>
         <ul class="progress-list" id="progressList"></ul>
@@ -179,6 +179,11 @@
           </svg>
           Send Anonymous Tip
         </button>
+
+        <!-- Tip Success State (hidden until confirmed) -->
+        <div class="success-banner" id="tipSuccessBanner" style="display:none;"></div>
+        <a class="tip-explorer-link" id="tipExplorerLink" href="#" target="_blank" rel="noopener" style="display:none;">View on Solana Explorer ↗</a>
+        <button id="btnNewTip" class="btn btn-secondary" style="display:none; width:100%; margin-top:12px;">Send Another Tip</button>
       </section>
 
       <!-- Spacer for fixed button -->
