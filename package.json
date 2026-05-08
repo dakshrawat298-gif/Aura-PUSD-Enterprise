@@ -1,15 +1,16 @@
 {
-  "name": "nodejs",
+  "name": "aura-enterprise",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Aura PUSD Enterprise - Solana Payroll Platform",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11"
+    "@types/node": "^22.13.11",
+    "express": "^4.22.1"
   }
 }
