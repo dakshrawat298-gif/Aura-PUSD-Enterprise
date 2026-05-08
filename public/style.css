@@ -1,0 +1,423 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --accent: #8b5cf6;
+  --accent-end: #6d28d9;
+  --accent-gradient: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  --bg: #050505;
+  --surface: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.45);
+  --text-tertiary: rgba(255, 255, 255, 0.25);
+  --nav-height: 80px;
+  --disburse-height: 88px;
+  --header-height: 60px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Subtle radial glow background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* App Container */
+.app-container {
+  position: relative;
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* ─── Header ─────────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  height: var(--header-height);
+  background: rgba(5, 5, 5, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.7);
+}
+
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+
+.btn-connect {
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.1px;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.btn-connect:active {
+  opacity: 0.8;
+  transform: scale(0.97);
+}
+
+/* ─── Main Content ───────────────────────────── */
+.main-content {
+  flex: 1;
+  padding: 20px 16px 0;
+  overflow-y: auto;
+}
+
+/* ─── Cards ──────────────────────────────────── */
+.card {
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  margin-bottom: 4px;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+/* ─── Upload Area ────────────────────────────── */
+.upload-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.015);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.upload-area:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.upload-area:active {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.upload-icon {
+  color: var(--accent);
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.upload-sub {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.upload-link {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.upload-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Employee List ──────────────────────────── */
+.employee-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.employee-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.employee-item:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.employee-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.employee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.employee-address {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.employee-amount {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ─── Payroll Total ──────────────────────────── */
+.payroll-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: rgba(139, 92, 246, 0.07);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 12px;
+}
+
+.total-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.total-amount {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+}
+
+/* ─── Bottom Spacer ──────────────────────────── */
+.bottom-spacer {
+  height: calc(var(--disburse-height) + var(--nav-height) + 8px);
+}
+
+/* ─── Disburse Button ────────────────────────── */
+.disburse-wrapper {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  padding: 0 16px;
+  z-index: 200;
+}
+
+.btn-disburse {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: -0.1px;
+  box-shadow: 0 8px 32px rgba(109, 40, 217, 0.45), 0 2px 8px rgba(0,0,0,0.4);
+  transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-disburse:active {
+  opacity: 0.88;
+  transform: translateX(0) scale(0.98);
+  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.35);
+}
+
+/* ─── Bottom Navigation ──────────────────────── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: var(--nav-height);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 10px 8px env(safe-area-inset-bottom, 10px);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  z-index: 150;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 12px;
+  transition: color 0.2s ease, background 0.2s ease;
+  min-width: 60px;
+}
+
+.nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
+.nav-item.active {
+  color: var(--accent);
+}
+
+.nav-item:active {
+  background: rgba(139, 92, 246, 0.08);
+  color: var(--accent);
+}
+
+/* ─── Desktop centering visual refinements ───── */
+@media (min-width: 430px) {
+  body {
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(109, 40, 217, 0.03) 0%, transparent 60%);
+  }
+}
+
+/* ─── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}

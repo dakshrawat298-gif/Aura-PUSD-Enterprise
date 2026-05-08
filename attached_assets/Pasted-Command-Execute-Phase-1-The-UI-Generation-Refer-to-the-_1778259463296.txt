@@ -1,0 +1,30 @@
+Command: Execute Phase 1 - The UI Generation.
+
+Refer to the `AURA_ARCHITECTURE.md` file. You are now going to generate the frontend structure.
+Do NOT write any JavaScript logic yet. Do NOT use external CSS frameworks like Tailwind. Use pure Vanilla HTML and CSS.
+
+Task 1: Create `/public/index.html`
+It must be a mobile-first layout. Structure the HTML with these exact elements:
+1. A top header containing the "Aura Enterprise" title and a "Connect Wallet" button.
+2. A main content container.
+3. A "Card" section for "Import Payroll CSV" containing a dashed upload area and an upload icon.
+4. A "Card" section for "Batch Payroll" showing a list of mock employees (e.g., "Employee 1", mock address, mock amount).
+5. A fixed bottom action button saying "Disburse Payroll".
+6. A bottom navigation bar with 4 standard icon placeholders (Home, Wallet, History, Settings).
+
+Task 2: Create `/public/style.css`
+You MUST use these exact design properties to achieve the "Apple-level iOS" Web3 Vibe:
+1. Global: `font-family: system-ui, -apple-system, sans-serif;`, `background-color: #050505;`, `color: #ffffff;`, `margin: 0;`, `padding: 0;`.
+2. Main Container: Constrain max-width to `430px` (iPhone Pro Max width) and center it horizontally on desktop screens (`margin: 0 auto`).
+3. Glassmorphism Cards: 
+   - `background: rgba(255, 255, 255, 0.03);`
+   - `backdrop-filter: blur(16px);`
+   - `-webkit-backdrop-filter: blur(16px);`
+   - `border: 1px solid rgba(255, 255, 255, 0.08);`
+   - `border-radius: 20px;`
+   - `padding: 20px;`
+   - `margin-bottom: 16px;`
+4. Accent Color: Use an electric violet/purple (`#8b5cf6` or linear gradient `#8b5cf6` to `#6d28d9`) for the "Connect Wallet" and "Disburse Payroll" buttons. Make buttons fully rounded (`border-radius: 9999px`).
+5. Inputs/Dashed Areas: For the CSV upload area, use `border: 1px dashed rgba(255, 255, 255, 0.2);`, `border-radius: 12px;`, and a slightly lighter background on hover.
+
+Output: Provide the complete HTML and CSS code. Stop and wait for my next command after this.
