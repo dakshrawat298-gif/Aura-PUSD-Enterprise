@@ -15,9 +15,8 @@
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.45);
   --text-tertiary: rgba(255, 255, 255, 0.25);
-  --nav-height: 80px;
   --disburse-height: 88px;
-  --header-height: 60px;
+  --header-height: 64px;
 }
 
 html {
@@ -66,7 +65,7 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
-  height: var(--header-height);
+  min-height: var(--header-height);
   background: rgba(5, 5, 5, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -76,7 +75,7 @@ body::before {
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .header-dot {
@@ -86,13 +85,28 @@ body::before {
   border-radius: 50%;
   background: var(--accent-gradient);
   box-shadow: 0 0 8px rgba(139, 92, 246, 0.7);
+  flex-shrink: 0;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .header-title {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.3px;
   color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.header-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.1px;
 }
 
 .btn-connect {
@@ -105,6 +119,8 @@ body::before {
   font-weight: 600;
   cursor: pointer;
   letter-spacing: 0.1px;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
@@ -118,6 +134,51 @@ body::before {
   flex: 1;
   padding: 20px 16px 0;
   overflow-y: auto;
+}
+
+/* ─── Mode Toggle ────────────────────────────── */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.toggle-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: -0.1px;
+  transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.toggle-pill.active {
+  background: var(--accent-gradient);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.4);
+}
+
+.toggle-pill:not(.active):hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.toggle-pill:active {
+  transform: scale(0.97);
 }
 
 /* ─── Cards ──────────────────────────────────── */
@@ -316,13 +377,13 @@ body::before {
 
 /* ─── Bottom Spacer ──────────────────────────── */
 .bottom-spacer {
-  height: calc(var(--disburse-height) + var(--nav-height) + 8px);
+  height: calc(var(--disburse-height) + 24px);
 }
 
 /* ─── Disburse Button ────────────────────────── */
 .disburse-wrapper {
   position: fixed;
-  bottom: calc(var(--nav-height) + 12px);
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -354,57 +415,6 @@ body::before {
   opacity: 0.88;
   transform: translateX(0) scale(0.98);
   box-shadow: 0 4px 16px rgba(109, 40, 217, 0.35);
-}
-
-/* ─── Bottom Navigation ──────────────────────── */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 430px;
-  height: var(--nav-height);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  padding: 10px 8px env(safe-area-inset-bottom, 10px);
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-top: 1px solid var(--border);
-  z-index: 150;
-}
-
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  padding: 6px 16px;
-  border-radius: 12px;
-  transition: color 0.2s ease, background 0.2s ease;
-  min-width: 60px;
-}
-
-.nav-item span {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-}
-
-.nav-item.active {
-  color: var(--accent);
-}
-
-.nav-item:active {
-  background: rgba(139, 92, 246, 0.08);
-  color: var(--accent);
 }
 
 /* ─── Desktop centering visual refinements ───── */

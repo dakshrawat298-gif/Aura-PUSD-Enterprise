@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#050505" />
-  <title>Aura Enterprise</title>
+  <title>Aura PUSD Enterprise</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -15,13 +15,22 @@
     <header class="header">
       <div class="header-logo">
         <span class="header-dot"></span>
-        <span class="header-title">Aura Enterprise</span>
+        <div class="header-text">
+          <span class="header-title">Aura PUSD Enterprise</span>
+          <span class="header-sub">Powered by Solana &amp; PUSD</span>
+        </div>
       </div>
       <button class="btn-connect" id="btnConnect">Connect Wallet</button>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
+
+      <!-- Mode Toggle -->
+      <div class="mode-toggle" id="modeToggle">
+        <button class="toggle-pill active" data-mode="enterprise">⚡️ Enterprise</button>
+        <button class="toggle-pill" data-mode="creator">✨ Creator</button>
+      </div>
 
       <!-- Import Payroll CSV Card -->
       <section class="card">
@@ -35,7 +44,7 @@
               <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
           </div>
-          <p class="upload-label">Drag & drop your CSV here</p>
+          <p class="upload-label">Drag &amp; drop your CSV here</p>
           <p class="upload-sub">or <span class="upload-link">browse files</span></p>
           <input type="file" accept=".csv" class="upload-input" id="csvInput" />
         </div>
@@ -97,39 +106,6 @@
         Disburse Payroll
       </button>
     </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-      <button class="nav-item active" aria-label="Home">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-        <span>Home</span>
-      </button>
-      <button class="nav-item" aria-label="Wallet">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="5" width="20" height="14" rx="3"/>
-          <path d="M16 12h2"/>
-          <path d="M2 10h20"/>
-        </svg>
-        <span>Wallet</span>
-      </button>
-      <button class="nav-item" aria-label="History">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-        </svg>
-        <span>History</span>
-      </button>
-      <button class="nav-item" aria-label="Settings">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-        <span>Settings</span>
-      </button>
-    </nav>
 
   </div>
 
