@@ -6,9 +6,9 @@
 }
 
 :root {
-  --accent: #8b5cf6;
-  --accent-end: #6d28d9;
-  --accent-gradient: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  --accent: #10b981;
+  --accent-end: #059669;
+  --accent-gradient: linear-gradient(135deg, #10b981, #059669);
   --bg: #050505;
   --surface: rgba(255, 255, 255, 0.03);
   --border: rgba(255, 255, 255, 0.08);
@@ -40,7 +40,7 @@ body::before {
   transform: translateX(-50%);
   width: 600px;
   height: 500px;
-  background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.07) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -84,7 +84,7 @@ body::before {
   height: 8px;
   border-radius: 50%;
   background: var(--accent-gradient);
-  box-shadow: 0 0 8px rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
   flex-shrink: 0;
 }
 
@@ -169,7 +169,7 @@ body::before {
 .toggle-pill.active {
   background: var(--accent-gradient);
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.4);
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.4);
 }
 
 .toggle-pill:not(.active):hover {
@@ -204,6 +204,7 @@ body::before {
   font-size: 12px;
   color: var(--text-secondary);
   margin-bottom: 16px;
+  line-height: 1.5;
 }
 
 .card-header-row {
@@ -217,8 +218,8 @@ body::before {
   font-size: 11px;
   font-weight: 600;
   color: var(--accent);
-  background: rgba(139, 92, 246, 0.12);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
   border-radius: 9999px;
   padding: 3px 10px;
 }
@@ -241,11 +242,11 @@ body::before {
 
 .upload-area:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(139, 92, 246, 0.4);
+  border-color: rgba(16, 185, 129, 0.4);
 }
 
 .upload-area:active {
-  background: rgba(139, 92, 246, 0.06);
+  background: rgba(16, 185, 129, 0.05);
 }
 
 .upload-icon {
@@ -357,8 +358,8 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: rgba(139, 92, 246, 0.07);
-  border: 1px solid rgba(139, 92, 246, 0.15);
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.14);
   border-radius: 12px;
 }
 
@@ -373,6 +374,158 @@ body::before {
   font-weight: 800;
   color: var(--accent);
   letter-spacing: -0.3px;
+}
+
+/* ─── Input Fields ───────────────────────────── */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.field-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.field-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.field-input:focus {
+  border-color: rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+/* Amount input wrapper with "PUSD" suffix */
+.amount-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amount-wrapper .field-input {
+  padding-right: 56px;
+}
+
+.amount-suffix {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
+
+/* ─── Quick-Select Pills ─────────────────────── */
+.quick-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.quick-pill {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.quick-pill:hover,
+.quick-pill.selected {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.quick-pill:active {
+  transform: scale(0.95);
+}
+
+/* ─── Textarea ───────────────────────────────── */
+.field-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary);
+  outline: none;
+  resize: none;
+  min-height: 80px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.field-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.field-textarea:focus {
+  border-color: rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.char-counter {
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+/* ─── Send Tip Button ────────────────────────── */
+.btn-send-tip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  padding: 15px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: -0.1px;
+  margin-top: 4px;
+  box-shadow: 0 8px 28px rgba(5, 150, 105, 0.35), 0 2px 8px rgba(0,0,0,0.4);
+  transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-send-tip:active {
+  opacity: 0.88;
+  transform: scale(0.98);
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
 }
 
 /* ─── Bottom Spacer ──────────────────────────── */
@@ -407,22 +560,22 @@ body::before {
   font-weight: 700;
   cursor: pointer;
   letter-spacing: -0.1px;
-  box-shadow: 0 8px 32px rgba(109, 40, 217, 0.45), 0 2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 32px rgba(5, 150, 105, 0.4), 0 2px 8px rgba(0,0,0,0.4);
   transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-disburse:active {
   opacity: 0.88;
   transform: translateX(0) scale(0.98);
-  box-shadow: 0 4px 16px rgba(109, 40, 217, 0.35);
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
 }
 
 /* ─── Desktop centering visual refinements ───── */
 @media (min-width: 430px) {
   body {
     background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(109, 40, 217, 0.03) 0%, transparent 60%);
+      radial-gradient(ellipse at 20% 50%, rgba(16, 185, 129, 0.03) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(5, 150, 105, 0.03) 0%, transparent 60%);
   }
 }
 

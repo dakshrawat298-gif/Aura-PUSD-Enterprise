@@ -1,0 +1,26 @@
+Command: Execute Phase 5 - Pixel Perfection, Creator Mode & PUSD Branding.
+
+Task 1: The PUSD Color Rebranding
+Change the primary accent color across the entire app (buttons, active toggles, glow effects, borders on focus) from electric violet to a premium PUSD Emerald Green (use hex `#10b981` or a linear gradient `#10b981` to `#059669`). This matches the Palm USD logo.
+
+Task 2: Pixel-Perfect Input Fields (Native iOS Feel)
+Update the CSS and HTML for all input fields to perfectly match the reference design:
+- Add the placeholder text "Solana wallet address" in a muted/light grey color (`rgba(255,255,255,0.4)`).
+- For amount inputs, the placeholder must be "0.00".
+- CRITICAL: Create a `position: relative` wrapper around the amount input. Place a `position: absolute` span saying "PUSD" vertically centered on the far right side inside the input box. The text "PUSD" should be muted.
+
+Task 3: Build the "Creator" UI Component
+In `index.html`, add a new card section for "Anonymous Tip" (hide it by default using `display: none;`). It must perfectly match this structure:
+- Subtext below title: "Your identity is protected via stealth addresses. The creator receives PUSD — no on-chain link to you."
+- Input 1: "Creator's Wallet" (with the new pixel-perfect placeholder).
+- Input 2: "Tip Amount" (with placeholder "0.00" and "PUSD" locked on the right).
+- A row of 4 quick-select pill buttons: "$1", "$5", "$10", "$25". They should be transparent with a border, and turn solid green on hover/active.
+- Textarea: "Message (optional, off-chain)" with a "0/120" char counter below it.
+- A bottom button: "Send Anonymous Tip" with a lock icon next to the text.
+
+Task 4: Wire the Toggle Logic in `app.js`
+Write JavaScript to make the "Enterprise / Creator" segmented toggle work.
+- Clicking "Creator" activates its pill (turns it PUSD Green), hides the "Import CSV" and "Batch Payroll" cards, and shows the "Anonymous Tip" card.
+- Clicking "Enterprise" reverses this.
+
+Output: Implement these exact changes across `index.html`, `style.css`, and `app.js`. Do not break any existing Phantom wallet connection logic.
