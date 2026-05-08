@@ -23,6 +23,6 @@ app.get('*', (req, res) => {
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`✦ Aura Enterprise Server Running on port ${PORT}`);
+app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
+  console.log("Aura Enterprise Server Running on port 5000");
 });
