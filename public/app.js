@@ -555,7 +555,9 @@
     const a    = document.createElement('a');
     a.href     = url;
     a.download = `aura-payroll-${now}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
 
@@ -601,11 +603,13 @@
     if (mode === 'enterprise') {
       cardImportCSV.style.display    = '';
       cardBatchPayroll.style.display = '';
+      cardProgress.style.display     = 'none';
       cardCreator.style.display      = 'none';
       disburseWrapper.style.display  = '';
     } else {
       cardImportCSV.style.display    = 'none';
       cardBatchPayroll.style.display = 'none';
+      cardProgress.style.display     = 'none';
       cardCreator.style.display      = '';
       disburseWrapper.style.display  = 'none';
     }
