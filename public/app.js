@@ -4,8 +4,8 @@
   // ─── State ───────────────────────────────────────────────────────────────────
   const state = {
     walletAddress: null,
-    payrollData: [],
     mode: 'enterprise',
+    employeeCount: 0,
   };
 
   // ─── DOM References ───────────────────────────────────────────────────────────
@@ -17,23 +17,24 @@
   const totalAmount     = document.getElementById('totalAmount');
   const btnDisburse     = document.getElementById('btnDisburse');
   const disburseWrapper = document.getElementById('disburseWrapper');
+  const btnAddEmployee  = document.getElementById('btnAddEmployee');
 
   // Toggle
   const modeToggle      = document.getElementById('modeToggle');
   const togglePills     = modeToggle.querySelectorAll('.toggle-pill');
 
   // Enterprise cards
-  const cardImportCSV   = document.getElementById('cardImportCSV');
-  const cardBatchPayroll= document.getElementById('cardBatchPayroll');
+  const cardImportCSV    = document.getElementById('cardImportCSV');
+  const cardBatchPayroll = document.getElementById('cardBatchPayroll');
 
   // Creator card
-  const cardCreator     = document.getElementById('cardCreator');
-  const creatorWallet   = document.getElementById('creatorWallet');
-  const tipAmount       = document.getElementById('tipAmount');
-  const quickPills      = document.getElementById('quickPills');
-  const tipMessage      = document.getElementById('tipMessage');
-  const charCount       = document.getElementById('charCount');
-  const btnSendTip      = document.getElementById('btnSendTip');
+  const cardCreator  = document.getElementById('cardCreator');
+  const creatorWallet= document.getElementById('creatorWallet');
+  const tipAmount    = document.getElementById('tipAmount');
+  const quickPills   = document.getElementById('quickPills');
+  const tipMessage   = document.getElementById('tipMessage');
+  const charCount    = document.getElementById('charCount');
+  const btnSendTip   = document.getElementById('btnSendTip');
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -73,6 +74,94 @@
       btn.style.opacity = '';
     }, 2000);
   }
+
+  // ─── Payroll Total ────────────────────────────────────────────────────────────
+
+  function recalculateTotal() {
+    const inputs = employeeList.querySelectorAll('.emp-amount-input');
+    let total = 0;
+    inputs.forEach(input => {
+      const val = parseFloat(input.value);
+      if (!isNaN(val)) total += val;
+    });
+    totalAmount.textContent = `${formatAmount(total)} PUSD`;
+
+    const count = employeeList.querySelectorAll('.emp-card').length;
+    recipientBadge.textContent = `${count} Recipient${count !== 1 ? 's' : ''}`;
+  }
+
+  // ─── Employee Card Factory ────────────────────────────────────────────────────
+
+  /**
+   * Build and append one editable employee card to the list.
+   * @param {{ walletAddress?: string, amount?: number }} [data]
+   */
+  function addEmployee(data = {}) {
+    state.employeeCount += 1;
+    const index = state.employeeCount;
+
+    const li = document.createElement('li');
+    li.className = 'emp-card';
+
+    li.innerHTML = `
+      <div class="emp-card-header">
+        <div class="emp-card-label">
+          <span class="emp-dot"></span>
+          <span class="emp-name">Employee ${index}</span>
+        </div>
+        <button class="emp-remove" type="button">Remove</button>
+      </div>
+      <input
+        type="text"
+        class="field-input wallet-input emp-wallet-input"
+        placeholder="Solana wallet address"
+        value="${data.walletAddress || ''}"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="amount-wrapper">
+        <input
+          type="number"
+          class="field-input emp-amount-input"
+          placeholder="0.00"
+          value="${data.amount != null ? data.amount : ''}"
+          min="0"
+          step="0.01"
+        />
+        <span class="amount-suffix">PUSD</span>
+      </div>
+    `;
+
+    // Remove handler
+    li.querySelector('.emp-remove').addEventListener('click', () => {
+      li.remove();
+      recalculateTotal();
+    });
+
+    // Live total recalc on amount change
+    li.querySelector('.emp-amount-input').addEventListener('input', recalculateTotal);
+
+    employeeList.appendChild(li);
+    recalculateTotal();
+  }
+
+  // ─── Read live payroll data from DOM ─────────────────────────────────────────
+
+  function getPayrollFromDOM() {
+    const cards = employeeList.querySelectorAll('.emp-card');
+    const records = [];
+    cards.forEach(card => {
+      const wallet = card.querySelector('.emp-wallet-input').value.trim();
+      const amount = parseFloat(card.querySelector('.emp-amount-input').value);
+      if (wallet && !isNaN(amount) && amount > 0) {
+        records.push({ walletAddress: wallet, amount });
+      }
+    });
+    return records;
+  }
+
+  // Add Employee button
+  btnAddEmployee.addEventListener('click', () => addEmployee());
 
   // ─── 1. Phantom Wallet Connection ─────────────────────────────────────────────
   async function connectWallet() {
@@ -179,7 +268,6 @@
         return;
       }
 
-      state.payrollData = records;
       showUploadFeedback(`✓ Loaded ${records.length} recipient${records.length !== 1 ? 's' : ''} from CSV.`, 'success');
       renderPayrollList(records);
     };
@@ -208,29 +296,18 @@
     if (file) handleCSVFile(file);
   });
 
-  // ─── 3. Dynamic UI Updates ────────────────────────────────────────────────────
+  // ─── 3. Render editable payroll list ─────────────────────────────────────────
 
+  /**
+   * Clear the list and rebuild editable cards from a records array.
+   * Pre-fills wallet + amount inputs so the user can still edit before disbursing.
+   * @param {{ walletAddress: string, amount: number }[]} records
+   */
   function renderPayrollList(records) {
     employeeList.innerHTML = '';
+    state.employeeCount = 0;
 
-    records.forEach((rec, i) => {
-      const li = document.createElement('li');
-      li.className = 'employee-item';
-      li.innerHTML = `
-        <div class="employee-avatar">E${i + 1}</div>
-        <div class="employee-info">
-          <span class="employee-name">Employee ${i + 1}</span>
-          <span class="employee-address">${abbreviateAddress(rec.walletAddress)}</span>
-        </div>
-        <span class="employee-amount">${formatAmount(rec.amount)} PUSD</span>
-      `;
-      employeeList.appendChild(li);
-    });
-
-    recipientBadge.textContent = `${records.length} Recipient${records.length !== 1 ? 's' : ''}`;
-
-    const total = records.reduce((sum, r) => sum + r.amount, 0);
-    totalAmount.textContent = `${formatAmount(total)} PUSD`;
+    records.forEach(rec => addEmployee(rec));
   }
 
   // ─── 4. Disburse Trigger ─────────────────────────────────────────────────────
@@ -241,17 +318,19 @@
       return;
     }
 
-    if (state.payrollData.length === 0) {
-      console.warn('[Aura] No payroll data loaded. Aborting disburse.');
-      flashButton(btnDisburse, 'No payroll data');
+    const payrollData = getPayrollFromDOM();
+
+    if (payrollData.length === 0) {
+      console.warn('[Aura] No valid payroll entries. Aborting disburse.');
+      flashButton(btnDisburse, 'Add payroll data first');
       return;
     }
 
     console.log('[Aura] Disburse triggered.');
     console.log('[Aura] Sender wallet:', state.walletAddress);
-    console.log('[Aura] Payroll payload:', state.payrollData);
+    console.log('[Aura] Payroll payload:', payrollData);
 
-    // Phase 6 will wire this to the Node.js backend.
+    // Phase 7 will wire this to the Node.js backend.
   });
 
   // ─── 5. Mode Toggle ──────────────────────────────────────────────────────────
@@ -259,13 +338,8 @@
   function setMode(mode) {
     state.mode = mode;
 
-    // Update pill active states
     togglePills.forEach(pill => {
-      if (pill.dataset.mode === mode) {
-        pill.classList.add('active');
-      } else {
-        pill.classList.remove('active');
-      }
+      pill.classList.toggle('active', pill.dataset.mode === mode);
     });
 
     if (mode === 'enterprise') {
@@ -293,7 +367,6 @@
     const pill = e.target.closest('.quick-pill');
     if (!pill) return;
 
-    // Toggle selected state
     const isAlreadySelected = pill.classList.contains('selected');
     quickPills.querySelectorAll('.quick-pill').forEach(p => p.classList.remove('selected'));
 
@@ -305,7 +378,6 @@
     }
   });
 
-  // Clear quick-pill selection when user manually edits the amount
   tipAmount.addEventListener('input', () => {
     quickPills.querySelectorAll('.quick-pill').forEach(p => p.classList.remove('selected'));
   });
@@ -348,7 +420,7 @@
     console.log('[Aura] Anonymous tip triggered.');
     console.log('[Aura] Tip payload:', payload);
 
-    // Phase 6 will wire this to the stealth address backend.
+    // Phase 7 will wire this to the stealth address backend.
   });
 
   // ─── Drag-over CSS injection ──────────────────────────────────────────────────
@@ -360,5 +432,8 @@
     }
   `;
   document.head.appendChild(dragStyle);
+
+  // ─── Init — seed one blank employee row ──────────────────────────────────────
+  addEmployee();
 
 })();

@@ -56,40 +56,25 @@
       <section class="card" id="cardBatchPayroll">
         <div class="card-header-row">
           <h2 class="card-title">Batch Payroll</h2>
-          <span class="badge" id="recipientBadge">3 Recipients</span>
+          <span class="badge" id="recipientBadge">0 Recipients</span>
         </div>
-        <p class="card-subtitle">Review employees before disbursement</p>
+        <p class="card-subtitle">Add employees manually or import a CSV above</p>
 
-        <ul class="employee-list" id="employeeList">
-          <li class="employee-item">
-            <div class="employee-avatar">E1</div>
-            <div class="employee-info">
-              <span class="employee-name">Employee 1</span>
-              <span class="employee-address">7xKp…mN3Q</span>
-            </div>
-            <span class="employee-amount">1,200 PUSD</span>
-          </li>
-          <li class="employee-item">
-            <div class="employee-avatar">E2</div>
-            <div class="employee-info">
-              <span class="employee-name">Employee 2</span>
-              <span class="employee-address">3rWq…jB8T</span>
-            </div>
-            <span class="employee-amount">950 PUSD</span>
-          </li>
-          <li class="employee-item">
-            <div class="employee-avatar">E3</div>
-            <div class="employee-info">
-              <span class="employee-name">Employee 3</span>
-              <span class="employee-address">9cLz…fK2Y</span>
-            </div>
-            <span class="employee-amount">1,750 PUSD</span>
-          </li>
-        </ul>
+        <!-- Editable employee rows — rendered by app.js -->
+        <ul class="employee-list" id="employeeList"></ul>
+
+        <!-- Add Employee -->
+        <button class="btn-add-employee" id="btnAddEmployee">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Employee
+        </button>
 
         <div class="payroll-total">
           <span class="total-label">Total Disbursement</span>
-          <span class="total-amount" id="totalAmount">3,900 PUSD</span>
+          <span class="total-amount" id="totalAmount">0 PUSD</span>
         </div>
       </section>
 
@@ -104,7 +89,7 @@
           <label class="field-label">Creator's Wallet</label>
           <input
             type="text"
-            class="field-input"
+            class="field-input wallet-input"
             id="creatorWallet"
             placeholder="Solana wallet address"
             autocomplete="off"
