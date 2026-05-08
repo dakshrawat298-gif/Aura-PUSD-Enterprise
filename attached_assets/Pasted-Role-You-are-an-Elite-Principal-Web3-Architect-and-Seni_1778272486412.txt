@@ -1,0 +1,26 @@
+Role: You are an Elite Principal Web3 Architect and Senior Solana Smart Contract Engineer.
+Command: Execute Phase 9 - The Core Web3 Integration.
+
+Context: You are building "Aura PUSD Enterprise". You must write production-grade, highly secure integration code. We are replacing the frontend "simulation" with real Web3 logic by connecting `app.js` to our backend `solanaPayroll.js`.
+
+Task 1: Add Solana Web3 to Frontend
+In `public/index.html`, add the official Solana Web3.js CDN script tag right before the `app.js` script tag:
+`<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>`
+
+Task 2: Create the Backend API Endpoint
+In `server.js`, add a new POST route `/api/build-payroll-tx`.
+1. It must accept JSON body: `{ senderPublicKey, recipientsArray, amount, tokenMint }`.
+2. It must import the `createBatchTransferTransaction` function from `./src/solanaPayroll.js`.
+3. Call the function with the provided data.
+4. If successful, return `{ success: true, transactionBase64: <result> }`.
+5. If it fails, catch the error and return `{ success: false, error: error.message }` with a 400 status.
+
+Task 3: Overhaul `app.js` Disburse Logic
+Replace the `setTimeout` simulation in the Disburse button click handler with real Web3 flow:
+1. Show the Progress Card and set status to "Building transaction...".
+2. Make a `fetch()` POST request to `/api/build-payroll-tx`. Pass the connected Phantom public key, the array of wallet addresses from the CSV, the amount from the inputs, and a dummy PUSD devnet token mint address (e.g., "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr" for testing).
+3. If the API returns the `transactionBase64` string, decode it on the frontend using `solanaWeb3.Transaction.from(Uint8Array.from(atob(base64), c => c.charCodeAt(0)))`.
+4. Update status to "Waiting for signature..." and call `window.solana.signAndSendTransaction(transaction)`.
+5. If Phantom signs and sends it successfully, change all dots to Green, text to "Paid ✓", and trigger the success banner. Catch and display any rejection errors via our Toast system.
+
+Output: Update `index.html`, `server.js`, and `app.js` with this production logic. Ensure no existing UI animations are broken.

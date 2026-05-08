@@ -371,36 +371,36 @@
     }
 
     state.lastPayrollData = payrollData;
-    runDisburseSimulation(payrollData);
+    runDisburse(payrollData);
   });
 
-  // ─── Disburse Simulation ──────────────────────────────────────────────────────
+  // ─── PUSD Devnet Token Mint ───────────────────────────────────────────────────
+  const PUSD_DEVNET_MINT = 'Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr';
 
-  function runDisburseSimulation(payrollData) {
-    const total = payrollData.length;
+  // ─── Spinner HTML helper ──────────────────────────────────────────────────────
+  const spinnerSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`;
 
-    // 1. Lock the button
+  const disburseSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
+
+  function setDisburseLoading(label) {
     btnDisburse.disabled = true;
-    btnDisburse.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite">
-        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-      </svg>
-      Running Payroll…`;
+    btnDisburse.innerHTML = `${spinnerSVG} ${label}`;
+  }
 
-    // 2. Hide input cards, reveal progress card
-    cardImportCSV.style.display    = 'none';
-    cardBatchPayroll.style.display = 'none';
-    cardProgress.style.display     = '';
-    postPayment.style.display      = 'none';
+  function resetDisburseButton() {
+    btnDisburse.disabled = false;
+    btnDisburse.style.background = '';
+    btnDisburse.innerHTML = `${disburseSVG} Disburse Payroll`;
+  }
 
-    // 3. Build progress rows
+  // ─── Build progress rows from payroll data ────────────────────────────────────
+  function buildProgressRows(payrollData) {
     progressList.innerHTML = '';
-    progressBadge.textContent = `0 / ${total}`;
+    progressBadge.textContent = `0 / ${payrollData.length}`;
 
-    const rows = payrollData.map((rec, i) => {
+    return payrollData.map(rec => {
       const li = document.createElement('li');
       li.className = 'progress-row';
-
       const shortWallet = `${rec.walletAddress.slice(0, 5)}…${rec.walletAddress.slice(-4)}`;
       li.innerHTML = `
         <span class="progress-dot"></span>
@@ -408,56 +408,120 @@
           <span class="progress-wallet">${shortWallet}</span>
           <span class="progress-amount">${formatAmount(rec.amount)} PUSD</span>
         </div>
-        <span class="progress-status">Pending…</span>
-        <a class="progress-view" href="https://solscan.io/" target="_blank" rel="noopener">View ↗</a>
+        <span class="progress-status">Building transaction…</span>
+        <a class="progress-view" href="#" target="_blank" rel="noopener">View ↗</a>
       `;
-
       progressList.appendChild(li);
       return li;
     });
+  }
 
-    // 4. Animate each row in sequence with staggered timing
-    const STEP_MS   = 500;   // delay between each employee starting
-    const PHASE1_MS = 700;   // "Waiting for signature…"
-    const PHASE2_MS = 1600;  // "Confirming on-chain…"
-    const PHASE3_MS = 2600;  // "Paid ✓"
+  function setAllRowStatus(rows, text) {
+    rows.forEach(row => {
+      row.querySelector('.progress-status').textContent = text;
+    });
+  }
 
-    let confirmedCount = 0;
-
-    rows.forEach((row, i) => {
-      const offset = i * STEP_MS;
-      const dot    = row.querySelector('.progress-dot');
-      const status = row.querySelector('.progress-status');
+  function markAllRowsPaid(rows, signature, total) {
+    rows.forEach((row, idx) => {
+      const dot      = row.querySelector('.progress-dot');
+      const status   = row.querySelector('.progress-status');
       const viewLink = row.querySelector('.progress-view');
 
-      setTimeout(() => {
-        status.textContent = 'Deriving stealth address…';
-      }, offset);
+      dot.classList.add('confirmed');
+      row.classList.add('confirmed');
+      status.textContent = 'Paid ✓';
+      status.classList.add('paid');
+      viewLink.href = `https://solscan.io/tx/${signature}?cluster=devnet`;
+      viewLink.classList.add('visible');
 
-      setTimeout(() => {
-        status.textContent = 'Waiting for signature…';
-      }, offset + PHASE1_MS);
-
-      setTimeout(() => {
-        status.textContent = 'Confirming on-chain…';
-      }, offset + PHASE2_MS);
-
-      setTimeout(() => {
-        dot.classList.add('confirmed');
-        row.classList.add('confirmed');
-        status.textContent = 'Paid ✓';
-        status.classList.add('paid');
-        viewLink.classList.add('visible');
-
-        confirmedCount += 1;
-        progressBadge.textContent = `${confirmedCount} / ${total}`;
-
-        // When last employee is confirmed
-        if (confirmedCount === total) {
-          onAllConfirmed(total);
-        }
-      }, offset + PHASE3_MS);
+      progressBadge.textContent = `${idx + 1} / ${total}`;
     });
+  }
+
+  function markAllRowsFailed(rows, message) {
+    rows.forEach(row => {
+      const status = row.querySelector('.progress-status');
+      status.textContent = 'Failed';
+      status.style.color = '#f87171';
+    });
+  }
+
+  // ─── Real Web3 Disburse Flow ──────────────────────────────────────────────────
+
+  async function runDisburse(payrollData) {
+    const total = payrollData.length;
+
+    // Lock button and show progress card
+    setDisburseLoading('Building transaction…');
+    cardImportCSV.style.display    = 'none';
+    cardBatchPayroll.style.display = 'none';
+    cardProgress.style.display     = '';
+    postPayment.style.display      = 'none';
+
+    const rows = buildProgressRows(payrollData);
+
+    try {
+      // ── Step 1: Ask the backend to build the unsigned batch transaction ──────
+      const res = await fetch('/api/build-payroll-tx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          senderPublicKey: state.walletAddress,
+          recipientsArray: payrollData,
+          tokenMint: PUSD_DEVNET_MINT,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Backend failed to build transaction.');
+      }
+
+      // ── Step 2: Deserialize the base64 transaction using Solana Web3.js ─────
+      const txBytes   = Uint8Array.from(atob(data.transactionBase64), c => c.charCodeAt(0));
+      const transaction = solanaWeb3.Transaction.from(txBytes);
+
+      // ── Step 3: Ask Phantom to sign and send ─────────────────────────────────
+      setDisburseLoading('Waiting for signature…');
+      setAllRowStatus(rows, 'Waiting for signature…');
+
+      const { signature } = await window.solana.signAndSendTransaction(transaction);
+
+      console.log('[Aura] Transaction sent. Signature:', signature);
+
+      // ── Step 4: Confirm on-chain ──────────────────────────────────────────────
+      setDisburseLoading('Confirming on-chain…');
+      setAllRowStatus(rows, 'Confirming on-chain…');
+
+      const connection = new solanaWeb3.Connection(
+        solanaWeb3.clusterApiUrl('devnet'),
+        'confirmed',
+      );
+      await connection.confirmTransaction(signature, 'confirmed');
+
+      // ── Step 5: Mark all rows as paid ─────────────────────────────────────────
+      markAllRowsPaid(rows, signature, total);
+      onAllConfirmed(total);
+
+    } catch (err) {
+      console.error('[Aura] Disburse error:', err);
+
+      const isUserRejection =
+        err?.code === 4001 ||
+        err?.message?.toLowerCase().includes('reject') ||
+        err?.message?.toLowerCase().includes('user cancelled') ||
+        err?.message?.toLowerCase().includes('user denied');
+
+      const toastMsg = isUserRejection
+        ? 'Transaction rejected — wallet signature cancelled.'
+        : `Transaction failed: ${err.message}`;
+
+      showToast(toastMsg, 'error');
+      markAllRowsFailed(rows, err.message);
+      resetDisburseButton();
+    }
   }
 
   function onAllConfirmed(total) {
@@ -517,14 +581,7 @@
     addEmployee();
 
     // Reset disburse button
-    btnDisburse.disabled = false;
-    btnDisburse.style.background = '';
-    btnDisburse.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13"/>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-      </svg>
-      Disburse Payroll`;
+    resetDisburseButton();
 
     showToast('New payroll run ready.', 'info');
     window.scrollTo({ top: 0, behavior: 'smooth' });
