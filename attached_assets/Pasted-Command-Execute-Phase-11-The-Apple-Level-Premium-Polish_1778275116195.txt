@@ -1,0 +1,35 @@
+Command: Execute Phase 11 - The Apple-Level Premium Polish.
+
+Our UI needs strict refinement to meet elite, native iOS standards. Update `style.css` to fix the following 10 UI/UX flaws immediately:
+
+Task 1: Hide Native Scrollbars
+Globally apply `::-webkit-scrollbar { display: none; }` and `-ms-overflow-style: none;` to ensure a native app feel.
+
+Task 2: Tactile Button Feedback
+Add a click effect to ALL buttons (`.btn`, pill buttons, etc.). On `:active`, apply `transform: scale(0.97);` with a fast `transition: transform 0.1s ease;`.
+
+Task 3: PUSD Emerald Glow on Inputs
+When input fields are `:focus`, remove the default outline and add a premium glow: `box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3); border-color: #10b981;`.
+
+Task 4: Mute the Dashed Upload Box
+The dashed border on the CSV upload card is too loud. Change its border to a subtle `border: 1px dashed rgba(255, 255, 255, 0.15);`.
+
+Task 5: Perfect Creator Pills Alignment
+In the Creator tab, the quick-tip pills ($1, $5, etc.) must be in a flex container with `justify-content: space-between; gap: 8px;` and each pill must have `flex: 1; text-align: center;`.
+
+Task 6: Visual Hierarchy for Subtitle
+Target the "Powered by Solana & PUSD" subtext in the header. It must be muted: `opacity: 0.5; font-size: 0.8rem; font-weight: 400;`.
+
+Task 7: Smooth Toast Animations
+Update the `#toast-container` animation. Toasts must slide in smoothly using cubic-bezier physics. Add `transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);`.
+
+Task 8: Prevent Layout Shift on Success Banner
+The success banner must not push other elements jarringly. Give its container a smooth `max-height` or opacity transition so it glides into view.
+
+Task 9: iOS Safe-Area Chin
+Add padding to the very bottom of the main app container to respect the iPhone swipe bar: `padding-bottom: env(safe-area-inset-bottom, 20px);`.
+
+Task 10: Punchy Typography for Totals
+The main numbers (e.g., the Total Disbursement amount) must look heavy and premium. Give them `font-weight: 700; letter-spacing: -0.5px;`.
+
+Output: Update `style.css` (and `index.html` if necessary for classes) to achieve this exact pixel-perfect look.
