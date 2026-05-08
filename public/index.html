@@ -17,7 +17,7 @@
         <span class="header-dot"></span>
         <span class="header-title">Aura Enterprise</span>
       </div>
-      <button class="btn-connect">Connect Wallet</button>
+      <button class="btn-connect" id="btnConnect">Connect Wallet</button>
     </header>
 
     <!-- Main Content -->
@@ -45,11 +45,11 @@
       <section class="card">
         <div class="card-header-row">
           <h2 class="card-title">Batch Payroll</h2>
-          <span class="badge">3 Recipients</span>
+          <span class="badge" id="recipientBadge">3 Recipients</span>
         </div>
         <p class="card-subtitle">Review employees before disbursement</p>
 
-        <ul class="employee-list">
+        <ul class="employee-list" id="employeeList">
           <li class="employee-item">
             <div class="employee-avatar">E1</div>
             <div class="employee-info">
@@ -78,7 +78,7 @@
 
         <div class="payroll-total">
           <span class="total-label">Total Disbursement</span>
-          <span class="total-amount">3,900 PUSD</span>
+          <span class="total-amount" id="totalAmount">3,900 PUSD</span>
         </div>
       </section>
 
@@ -89,7 +89,7 @@
 
     <!-- Fixed Disburse Button -->
     <div class="disburse-wrapper">
-      <button class="btn-disburse">
+      <button class="btn-disburse" id="btnDisburse">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"/>
           <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -133,5 +133,6 @@
 
   </div>
 
+  <script src="app.js"></script>
 </body>
 </html>
