@@ -65,6 +65,36 @@
     uploadArea.appendChild(el);
   }
 
+  // ─── Toast Notification System ───────────────────────────────────────────────
+
+  const toastContainer = document.getElementById('toast-container');
+
+  /**
+   * Display a premium glassmorphic toast notification.
+   * @param {string} message
+   * @param {'success'|'error'|'info'} [type='info']
+   * @param {number} [duration=3500] ms before auto-dismiss
+   */
+  function showToast(message, type = 'info', duration = 3500) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+      <span class="toast-icon"></span>
+      <span class="toast-message">${message}</span>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    const dismiss = () => {
+      if (toast.classList.contains('removing')) return;
+      toast.classList.add('removing');
+      toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    };
+
+    const timer = setTimeout(dismiss, duration);
+    toast.addEventListener('click', () => { clearTimeout(timer); dismiss(); });
+  }
+
   function flashButton(btn, message) {
     const original = btn.innerHTML;
     btn.textContent = message;
@@ -184,6 +214,7 @@
       btnConnect.style.border = '1px solid rgba(16, 185, 129, 0.35)';
       btnConnect.disabled = false;
 
+      showToast('Wallet Connected Successfully', 'success');
       console.log('[Aura] Wallet connected:', state.walletAddress);
     } catch (err) {
       console.error('[Aura] Wallet connection rejected:', err);
@@ -215,6 +246,7 @@
       btnConnect.style.border = '';
       btnConnect.style.color = '';
       btnConnect.onclick = connectWallet;
+      showToast('Wallet Disconnected', 'info');
       console.log('[Aura] Wallet disconnected.');
     });
   }
@@ -314,6 +346,7 @@
   btnDisburse.addEventListener('click', () => {
     if (!state.walletAddress) {
       console.warn('[Aura] No wallet connected. Aborting disburse.');
+      showToast('Please connect your wallet first!', 'error');
       flashButton(btnDisburse, 'Connect wallet first');
       return;
     }
@@ -322,6 +355,7 @@
 
     if (payrollData.length === 0) {
       console.warn('[Aura] No valid payroll entries. Aborting disburse.');
+      showToast('Add at least one valid payroll entry first.', 'error');
       flashButton(btnDisburse, 'Add payroll data first');
       return;
     }
