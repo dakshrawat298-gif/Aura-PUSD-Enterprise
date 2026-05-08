@@ -1,0 +1,34 @@
+Command: Execute Phase 8 - Payroll Progress UI, Animations & Post-Payment UX.
+
+Task 1: Overhaul the Summary Section
+In `index.html` and `style.css`, redesign the summary section below the employee list. It must perfectly match this layout:
+- Left side: "Total Disbursement" (small text) with "0.00 PUSD" below it in large, bold, prominent text.
+- Right side: "Employees" (small text) with the total count in large, bold text below it.
+
+Task 2: Build the "Payroll Progress" Card (Hidden by Default)
+Create a new glassmorphic card that appears ONLY when "Disburse Payroll" is clicked. It must contain:
+- A header: "PAYROLL PROGRESS"
+- A dynamic list of employees. Each row should have:
+  - A glowing status dot (CSS animation: pulse). Start with purple (`#8b5cf6`).
+  - The abbreviated wallet address and amount.
+  - A dynamic status text (e.g., "Deriving stealth address...", "Waiting for signature...").
+  - A hidden "View ↗" link.
+
+Task 3: Implement the Disburse Simulation Logic (`app.js`)
+When "Disburse Payroll" is clicked:
+1. Change the button text to "Running Payroll..." and disable it.
+2. Hide the original "Batch Payroll" list and reveal the new "Payroll Progress" card.
+3. Simulate a sequence using `setTimeout`:
+   - Change text to "Confirming on-chain..."
+   - Finally, change the glowing dot to Green (`#10b981`), change text to "Paid", and reveal the "View ↗" link.
+
+Task 4: Post-Payment Actions
+Once the simulation is complete, dynamically show:
+- A green success banner: "All [X] payroll transactions confirmed."
+- A secondary button: "Download Payroll Report (CSV)"
+- A primary button: "Start New Payroll Run" (clicking this should reset the entire UI to step 1).
+
+Task 5: Principal Architect Brainstorming
+DO NOT write any code for this task. As an AI Architect, analyze our current PUSD Payroll system. Give me exactly 2 brilliant, out-of-the-box feature ideas that would make this app win the 1st prize at the Colosseum hackathon. Keep them brief.
+
+Output: Update HTML, CSS, and JS for Tasks 1-4. Then provide your ideas for Task 5.

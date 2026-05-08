@@ -6,6 +6,7 @@
     walletAddress: null,
     mode: 'enterprise',
     employeeCount: 0,
+    lastPayrollData: [],
   };
 
   // ─── DOM References ───────────────────────────────────────────────────────────
@@ -15,9 +16,19 @@
   const employeeList    = document.getElementById('employeeList');
   const recipientBadge  = document.getElementById('recipientBadge');
   const totalAmount     = document.getElementById('totalAmount');
+  const employeeCountDisplay = document.getElementById('employeeCountDisplay');
   const btnDisburse     = document.getElementById('btnDisburse');
   const disburseWrapper = document.getElementById('disburseWrapper');
   const btnAddEmployee  = document.getElementById('btnAddEmployee');
+
+  // Progress card
+  const cardProgress    = document.getElementById('cardProgress');
+  const progressList    = document.getElementById('progressList');
+  const progressBadge   = document.getElementById('progressBadge');
+  const postPayment     = document.getElementById('postPayment');
+  const successBanner   = document.getElementById('successBanner');
+  const btnDownloadReport = document.getElementById('btnDownloadReport');
+  const btnNewRun       = document.getElementById('btnNewRun');
 
   // Toggle
   const modeToggle      = document.getElementById('modeToggle');
@@ -118,6 +129,7 @@
 
     const count = employeeList.querySelectorAll('.emp-card').length;
     recipientBadge.textContent = `${count} Recipient${count !== 1 ? 's' : ''}`;
+    employeeCountDisplay.textContent = count;
   }
 
   // ─── Employee Card Factory ────────────────────────────────────────────────────
@@ -345,7 +357,6 @@
   // ─── 4. Disburse Trigger ─────────────────────────────────────────────────────
   btnDisburse.addEventListener('click', () => {
     if (!state.walletAddress) {
-      console.warn('[Aura] No wallet connected. Aborting disburse.');
       showToast('Please connect your wallet first!', 'error');
       flashButton(btnDisburse, 'Connect wallet first');
       return;
@@ -354,18 +365,172 @@
     const payrollData = getPayrollFromDOM();
 
     if (payrollData.length === 0) {
-      console.warn('[Aura] No valid payroll entries. Aborting disburse.');
       showToast('Add at least one valid payroll entry first.', 'error');
       flashButton(btnDisburse, 'Add payroll data first');
       return;
     }
 
-    console.log('[Aura] Disburse triggered.');
-    console.log('[Aura] Sender wallet:', state.walletAddress);
-    console.log('[Aura] Payroll payload:', payrollData);
-
-    // Phase 7 will wire this to the Node.js backend.
+    state.lastPayrollData = payrollData;
+    runDisburseSimulation(payrollData);
   });
+
+  // ─── Disburse Simulation ──────────────────────────────────────────────────────
+
+  function runDisburseSimulation(payrollData) {
+    const total = payrollData.length;
+
+    // 1. Lock the button
+    btnDisburse.disabled = true;
+    btnDisburse.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+      Running Payroll…`;
+
+    // 2. Hide input cards, reveal progress card
+    cardImportCSV.style.display    = 'none';
+    cardBatchPayroll.style.display = 'none';
+    cardProgress.style.display     = '';
+    postPayment.style.display      = 'none';
+
+    // 3. Build progress rows
+    progressList.innerHTML = '';
+    progressBadge.textContent = `0 / ${total}`;
+
+    const rows = payrollData.map((rec, i) => {
+      const li = document.createElement('li');
+      li.className = 'progress-row';
+
+      const shortWallet = `${rec.walletAddress.slice(0, 5)}…${rec.walletAddress.slice(-4)}`;
+      li.innerHTML = `
+        <span class="progress-dot"></span>
+        <div class="progress-info">
+          <span class="progress-wallet">${shortWallet}</span>
+          <span class="progress-amount">${formatAmount(rec.amount)} PUSD</span>
+        </div>
+        <span class="progress-status">Pending…</span>
+        <a class="progress-view" href="https://solscan.io/" target="_blank" rel="noopener">View ↗</a>
+      `;
+
+      progressList.appendChild(li);
+      return li;
+    });
+
+    // 4. Animate each row in sequence with staggered timing
+    const STEP_MS   = 500;   // delay between each employee starting
+    const PHASE1_MS = 700;   // "Waiting for signature…"
+    const PHASE2_MS = 1600;  // "Confirming on-chain…"
+    const PHASE3_MS = 2600;  // "Paid ✓"
+
+    let confirmedCount = 0;
+
+    rows.forEach((row, i) => {
+      const offset = i * STEP_MS;
+      const dot    = row.querySelector('.progress-dot');
+      const status = row.querySelector('.progress-status');
+      const viewLink = row.querySelector('.progress-view');
+
+      setTimeout(() => {
+        status.textContent = 'Deriving stealth address…';
+      }, offset);
+
+      setTimeout(() => {
+        status.textContent = 'Waiting for signature…';
+      }, offset + PHASE1_MS);
+
+      setTimeout(() => {
+        status.textContent = 'Confirming on-chain…';
+      }, offset + PHASE2_MS);
+
+      setTimeout(() => {
+        dot.classList.add('confirmed');
+        row.classList.add('confirmed');
+        status.textContent = 'Paid ✓';
+        status.classList.add('paid');
+        viewLink.classList.add('visible');
+
+        confirmedCount += 1;
+        progressBadge.textContent = `${confirmedCount} / ${total}`;
+
+        // When last employee is confirmed
+        if (confirmedCount === total) {
+          onAllConfirmed(total);
+        }
+      }, offset + PHASE3_MS);
+    });
+  }
+
+  function onAllConfirmed(total) {
+    showToast(`All ${total} payroll transactions confirmed!`, 'success');
+
+    successBanner.textContent = `All ${total} payroll transaction${total !== 1 ? 's' : ''} confirmed.`;
+    postPayment.style.display  = '';
+
+    btnDisburse.disabled = false;
+    btnDisburse.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Payroll Complete`;
+    btnDisburse.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+  }
+
+  // ─── CSV Report Download ──────────────────────────────────────────────────────
+
+  function downloadPayrollCSV() {
+    const data = state.lastPayrollData;
+    if (!data || data.length === 0) return;
+
+    const now    = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const header = 'walletAddress,amount,status,timestamp';
+    const rows   = data.map(r => `${r.walletAddress},${r.amount},Confirmed,${now}`);
+    const csv    = [header, ...rows].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `aura-payroll-${now}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  btnDownloadReport.addEventListener('click', downloadPayrollCSV);
+
+  // ─── Reset / New Payroll Run ──────────────────────────────────────────────────
+
+  function resetPayrollUI() {
+    // Hide progress, reveal inputs
+    cardProgress.style.display     = 'none';
+    cardImportCSV.style.display    = '';
+    cardBatchPayroll.style.display = '';
+    postPayment.style.display      = 'none';
+
+    // Clear progress list
+    progressList.innerHTML = '';
+    progressBadge.textContent = '0 / 0';
+
+    // Reset employee list
+    employeeList.innerHTML = '';
+    state.employeeCount = 0;
+    state.lastPayrollData = [];
+    addEmployee();
+
+    // Reset disburse button
+    btnDisburse.disabled = false;
+    btnDisburse.style.background = '';
+    btnDisburse.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+      Disburse Payroll`;
+
+    showToast('New payroll run ready.', 'info');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  btnNewRun.addEventListener('click', resetPayrollUI);
 
   // ─── 5. Mode Toggle ──────────────────────────────────────────────────────────
 

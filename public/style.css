@@ -389,28 +389,259 @@ body::before {
   transform: scale(0.98);
 }
 
-/* ─── Payroll Total ──────────────────────────── */
-.payroll-total {
+/* ─── Payroll Summary (two-column) ───────────── */
+.payroll-summary {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.13);
+  border-radius: 14px;
+  gap: 0;
+}
+
+.summary-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.summary-col--right {
+  align-items: flex-end;
+}
+
+.summary-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.summary-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.summary-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  margin: 0 20px;
+}
+
+/* ─── Progress Card ──────────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 currentColor; }
+  50%       { opacity: 0.7; transform: scale(1.25); }
+}
+
+.progress-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  background: rgba(16, 185, 129, 0.06);
-  border: 1px solid rgba(16, 185, 129, 0.14);
-  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
-.total-label {
+.progress-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.progress-card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.progress-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.progress-row {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.progress-row.confirmed {
+  border-color: rgba(16, 185, 129, 0.18);
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  box-shadow: 0 0 6px rgba(139, 92, 246, 0.7);
+  flex-shrink: 0;
+  animation: dot-pulse 1.4s ease-in-out infinite;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.progress-dot.confirmed {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+  animation: none;
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.progress-wallet {
+  font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progress-amount {
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
 }
 
-.total-amount {
-  font-size: 15px;
-  font-weight: 800;
+.progress-status {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  text-align: right;
+  transition: color 0.3s ease;
+}
+
+.progress-status.paid {
   color: var(--accent);
-  letter-spacing: -0.3px;
+  font-weight: 700;
+}
+
+.progress-view {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.progress-view.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ─── Post-payment Actions ───────────────────── */
+.post-payment {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  animation: toast-in 0.3s ease forwards;
+}
+
+.success-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #34d399;
+  text-align: center;
+  letter-spacing: -0.1px;
+}
+
+.btn-download-report {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-download-report:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.btn-new-run {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  background: var(--accent-gradient);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.btn-new-run:active {
+  opacity: 0.88;
+  transform: scale(0.98);
+}
+
+/* Disabled disburse state */
+.btn-disburse:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 /* ─── Input Fields ───────────────────────────── */
