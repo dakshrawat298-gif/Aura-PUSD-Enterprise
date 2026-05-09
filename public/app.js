@@ -500,7 +500,7 @@
       setAllRowStatus(rows, 'Confirming on-chain…');
 
       const connection = new solanaWeb3.Connection(
-        solanaWeb3.clusterApiUrl('devnet'),
+        'https://solana-devnet.g.alchemy.com/v2/UgmObc38dLiqCfiLFKuoX',
         'confirmed',
       );
       await connection.confirmTransaction(signature, 'confirmed');

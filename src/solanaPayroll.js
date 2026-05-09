@@ -15,8 +15,9 @@ const {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } = require('@solana/spl-token');
 
-const PUSD_DECIMALS = 6;
-const RPC_ENDPOINT  = clusterApiUrl('devnet');
+const PUSD_DECIMALS          = 6;
+const MAX_RECIPIENTS_PER_TX  = 5;
+const RPC_ENDPOINT           = 'https://solana-devnet.g.alchemy.com/v2/UgmObc38dLiqCfiLFKuoX';
 
 /**
  * Build a batch SPL token transfer transaction for all recipients.
@@ -33,6 +34,9 @@ async function createBatchTransferTransaction({ senderPublicKey, recipientsArray
   if (!tokenMint)         throw new Error('tokenMint is required.');
   if (!Array.isArray(recipientsArray) || recipientsArray.length === 0) {
     throw new Error('recipientsArray must be a non-empty array.');
+  }
+  if (recipientsArray.length > MAX_RECIPIENTS_PER_TX) {
+    throw new Error(`Batch size ${recipientsArray.length} exceeds MAX_RECIPIENTS_PER_TX (${MAX_RECIPIENTS_PER_TX}). Split into smaller chunks.`);
   }
 
   const connection = new Connection(RPC_ENDPOINT, 'confirmed');
