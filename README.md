@@ -1,77 +1,66 @@
-# ⚡️ Aura PUSD Enterprise
-**Confidential, Mobile-First Batch Payroll for the Solana Ecosystem.**
+# ⚡ Aura-Enterprise
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Test_Now-0052FF?style=for-the-badge)](INSERT_YOUR_LIVE_LINK_HERE)
-[![YouTube Pitch](https://img.shields.io/badge/YouTube-Watch_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](INSERT_YOUR_YOUTUBE_LINK_HERE)
-[![Solana](https://img.shields.io/badge/Built_on-Solana-14F195?style=for-the-badge&logo=solana&logoColor=white)](https://solana.com/)
-[![PUSD](https://img.shields.io/badge/Powered_by-Palm_USD-10B981?style=for-the-badge)](https://palmusd.com/)
-[![Mobile First](https://img.shields.io/badge/UI-Mobile_First-000000?style=for-the-badge&logo=apple&logoColor=white)]()
+**Censorship-Resistant, Mobile-First Batch Payroll for the Solana Ecosystem.**
 
-Aura PUSD Enterprise is a production-grade Web3 payroll suite designed to help decentralized organizations and traditional businesses stream censorship-resistant salaries using **Palm USD (PUSD)**.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-TEST_NOW-blue?style=for-the-badge)](#)
+[![Demo Video](https://img.shields.io/badge/Loom_Video-WATCH_PITCH-red?style=for-the-badge)](#)
+[![Built for](https://img.shields.io/badge/Built_for-SOLANA-14F195?style=for-the-badge&logo=solana&logoColor=white)](#)
+[![Powered By](https://img.shields.io/badge/Powered_by-PALM_USD-black?style=for-the-badge)](#)
 
----
-
-## ߛ The Problem vs. ߟ The Solution
-
-**The Problem:** Traditional Web3 payroll is a UX nightmare. HR teams have to manually approve dozens of transactions, worry about slippage, and deal with failed transfers if an employee's wallet isn't perfectly initialized. Furthermore, public ledgers leak sensitive salary data to the world.
-
-**The Solution:** Aura PUSD Enterprise abstracts away the blockchain. Upload a CSV, and our engine dynamically builds a highly optimized, single-signature batch transaction. 
+> **⚠️ CRITICAL NOTE TO JUDGES (DEVNET TESTING):** > Due to the unavailability of the official PUSD token on Devnet during the hackathon sprint, we have engineered this prototype using a **1:1 Custom Mock PUSD SPL Token** on the Solana Devnet to prove the end-to-end architecture and functionality. The protocol is 100% fully functional right now. Transitioning to the official mainnet PUSD token requires only a single-line address change in our environment variables.
 
 ---
 
-## ߧ Core Architecture Flow
+## 🎯 The Problem vs. The Solution
 
-Aura uses a highly efficient Node.js backend to construct unsigned, serialized transactions that are securely signed on the client-side via Phantom.
+**The Problem:** Traditional Web3 payroll is a UX nightmare and relies on centralized stablecoins (USDC/USDT) that carry the risk of frozen assets. Furthermore, HR teams face the **"ATA Trap"**: if an employee's wallet hasn't been initialized for a specific token, entire batch transfers fail on-chain, wasting time and network fees.
 
-```mermaid
-sequenceDiagram
-    participant HR as Employer (Phantom)
-    participant UI as Aura Frontend (iOS Native Vibe)
-    participant API as Node.js Transaction Builder
-    participant SOL as Solana Devnet (PUSD)
+**The Solution:** Aura-Enterprise abstracts away the blockchain. Upload a CSV, and our Node.js engine dynamically builds a highly optimized, single-signature batch transaction. We built exclusively on **PUSD** to guarantee censorship-resistant pay with a "No Freeze, No Blacklist" architecture.
 
-    HR->>UI: Upload Payroll CSV (Addresses & Amounts)
-    UI->>API: POST /api/build-payroll-tx
-    Note over API: Deterministic ATA Calculation<br/>Idempotent ATA Instructions<br/>Batch Transfer Logic
-    API-->>UI: Return Base64 Serialized Unsigned Tx
-    UI->>HR: Prompt Phantom Signature
-    HR->>UI: Approve & Sign Transaction
-    UI->>SOL: Broadcast via Web3.js
-    SOL-->>UI: Confirm Transaction & Generate Report
-    UI->>HR: Auto-Download CSV Report & Show Block Explorer
-```
+---
 
-## ߔ Key Technical Masterstrokes (Built for Hackathons)
- 1. **Idempotent ATA Creation:** The biggest point of failure in Solana token transfers is uninitialized Associated Token Accounts (ATAs). Aura's backend dynamically prepends `createAssociatedTokenAccountIdempotentInstruction` for every recipient. **Result:** 100% success rate, even for brand new employee wallets.
- 2. **Censorship Resistance:** Exclusively utilizes **PUSD**, leveraging its non-freezable, zero-blacklist SPL token architecture to guarantee that employee salaries can never be seized or blocked.
- 3. **Apple-Level UI/UX:** A strictly mobile-first, glassmorphic interface with haptic-like visual feedback, smooth cubic-bezier toast notifications, and zero native scrollbars.
- 4. **Single-Signature Batching:** Compresses up to 7 employee payouts (including ATA creation) into a single, size-optimized 1232-byte Solana transaction.
+## 🧠 Key Technical Masterstrokes (Built for Hackathons)
 
-## ߛ️ Tech Stack
- * **Frontend:** Vanilla HTML5, CSS3 (Glassmorphism), Vanilla JS (Zero heavy frameworks for max performance).
- * **Backend:** Node.js, Express.
- * **Web3 Engine:** `@solana/web3.js`, `@solana/spl-token`.
- * **Deployment:** Mobile-optimized PWA architecture.
+1. **Idempotent ATA Creation (The Gamechanger):** The biggest point of failure in Solana token transfers is uninitialized Associated Token Accounts (ATAs). Aura's backend dynamically prepends `createAssociatedTokenAccountIdempotentInstruction` for every recipient. **Result:** 100% success rate, even for brand-new employee wallets, without wasting RPC calls.
+2. **Smart Batching for MTU Limits:** Aura dynamically batches payouts into a single, optimized transaction to strictly adhere to Solana's 1232-byte MTU limits.
+3. **Censorship Resistance:** Exclusively utilizes Palm USD (PUSD), leveraging its non-freezable, non-blacklist SPL token architecture to guarantee that employee salaries can never be censored or blocked by centralized entities.
+4. **Mobile-First Execution:** The future of Web3 is mobile. This entire architecture—from the Node.js backend to the glassmorphic UI—was engineered and shipped entirely on an iPhone 13 by a 19-year-old solo founder.
 
-## ߓ The "Built on Mobile" Underdog Story
-> "I wanted to prove that enterprise-grade Web3 infrastructure doesn't require a $3000 MacBook. The future of Web3 mass adoption is mobile. I engineered this entire protocol—from the secure Node.js backend to the idempotent Web3 transaction logic and the Apple-level glassmorphic UI—using **nothing but an iPhone 13**. Mobile-first development for a mobile-first future."
-> **— Daksh Rawat (Solo Founder & Developer)**
-> 
+---
 
-## ߚ Future Roadmap (Q3/Q4 2026)
-Aura PUSD Enterprise is just the foundation. Our roadmap includes:
- * **Zero-Knowledge Salary Privacy:** Integrating ZK-circuits (e.g., Light Protocol) to allow companies to prove fair pay on-chain without revealing individual employee salaries.
- * **Conditional Payroll Escrow:** Smart contract-based streaming where funds are locked in escrow and released automatically based on GitHub PR merges or off-chain attestations.
+## ⚙️ Tech Stack & Architecture Flow
 
-## ⚙️ How to Run Locally (For Judges)
- 1. Clone the repository.
- 2. Install dependencies:
-```bash
-npm install
-```
- 3. Start the backend engine:
-```bash
-npm start
-```
- 4. Open the provided localhost or `0.0.0.0` link in a Web3-enabled browser (or use the Phantom mobile app browser).
- 5. Switch to **Solana Devnet**, import a CSV, and disburse!
+* **Frontend:** Mobile-optimized HTML/CSS/JS (Glassmorphism design), served via Express.
+* **Backend:** Node.js, Express.
+* **Web3 Engine:** `@solana/web3.js`, `@solana/spl-token`.
+* **Flow:** User connects Phantom Wallet -> Uploads CSV -> Node.js constructs an unsigned, serialized Base64 transaction -> Frontend decodes and prompts a single signature via Phantom.
+
+---
+
+## 🚀 How to Run Locally (For Judges)
+
+1. **Clone the repository:**
+   `git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git`
+   `cd YOUR_REPO_NAME`
+
+2. **Install dependencies:**
+   `npm install`
+
+3. **Start the backend engine:**
+   `npm start`
+
+4. **Test the UI:** Open `http://localhost:3000` (or your assigned port) in a Web3-enabled browser (or use the Phantom Mobile App Browser).
+
+5. **Execute:** Switch your Phantom wallet to **Solana Devnet**, connect, upload a test CSV, and disburse!
+
+---
+
+## 🔭 Future Roadmap (Q3/Q4 2026)
+
+We don't just pitch; we ship. While our core idempotent batching engine is live, our roadmap to scale to the DAO economy includes:
+
+* **Stage 1: Zero-Knowledge Salary Privacy:** Integrating ZK-circuits (e.g., Light Protocol) to allow companies to prove fair pay on-chain without revealing individual employee salaries.
+* **Stage 2: Smart Escrow:** Conditional PUSD streaming where funds are locked in escrow and released automatically based on GitHub PR merges or off-chain attestations.
+
+---
+*Built with precision for the Superteam UAE x Palm USD Global Track.*
