@@ -2,8 +2,8 @@
 
 **Censorship-Resistant, Mobile-First Batch Payroll for the Solana Ecosystem.**
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-TEST_NOW-blue?style=for-the-badge)](#)
-[![Demo Video](https://img.shields.io/badge/Loom_Video-WATCH_PITCH-red?style=for-the-badge)](#)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-TEST_NOW-blue?style=for-the-badge)](https://aura-pusd-enterprise.onrender.com)
+[![Demo Video](https://img.shields.io/badge/Loom_Video-WATCH_PITCH-red?style=for-the-badge)](PUT_YOUR_LOOM_LINK_HERE)
 [![Built for](https://img.shields.io/badge/Built_for-SOLANA-14F195?style=for-the-badge&logo=solana&logoColor=white)](#)
 [![Powered By](https://img.shields.io/badge/Powered_by-PALM_USD-black?style=for-the-badge)](#)
 
@@ -28,39 +28,51 @@
 
 ---
 
-## ⚙️ Tech Stack & Architecture Flow
+## ⚙️ Tech Stack & Core Architecture Flow
 
 * **Frontend:** Mobile-optimized HTML/CSS/JS (Glassmorphism design), served via Express.
 * **Backend:** Node.js, Express.
 * **Web3 Engine:** `@solana/web3.js`, `@solana/spl-token`.
-* **Flow:** User connects Phantom Wallet -> Uploads CSV -> Node.js constructs an unsigned, serialized Base64 transaction -> Frontend decodes and prompts a single signature via Phantom.
 
----
+```mermaid
+sequenceDiagram
+    autonumber
+    participant HR as HR/Employer (Phantom)
+    participant UI as Aura Frontend
+    participant API as Node.js Backend
+    participant Sol as Solana Network (Devnet)
+
+    HR->>UI: Upload CSV & Connect Wallet
+    UI->>API: Send Payer Address & Payee Data
+    activate API
+    API->>API: Prepend Idempotent ATAs
+    API->>API: Batch Instructions (Strict Limit: 5)
+    API->>UI: Return Serialized Base64 Transaction
+    deactivate API
+    UI->>HR: Prompt Single Phantom Signature
+    HR->>UI: Sign & Approve
+    UI->>Sol: Submit Transaction Payload
+    Sol-->>UI: Confirm Success (PUSD Disbursed)
+```
 
 ## 🚀 How to Run Locally (For Judges)
 
-1. **Clone the repository:**
+ 1. **Clone the repository:**
    `git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git`
    `cd YOUR_REPO_NAME`
-
-2. **Install dependencies:**
+ 2. **Install dependencies:**
    `npm install`
-
-3. **Start the backend engine:**
+ 3. **Start the backend engine:**
    `npm start`
-
-4. **Test the UI:** Open `http://localhost:3000` (or your assigned port) in a Web3-enabled browser (or use the Phantom Mobile App Browser).
-
-5. **Execute:** Switch your Phantom wallet to **Solana Devnet**, connect, upload a test CSV, and disburse!
-
----
+ 4. **Test the UI:** Open `http://localhost:3000` (or your assigned port) in a Web3-enabled browser (or use the Phantom Mobile App Browser).
+ 5. **Execute:** Switch your Phantom wallet to **Solana Devnet**, connect, upload a test CSV, and disburse!
 
 ## 🔭 Future Roadmap (Q3/Q4 2026)
 
 We don't just pitch; we ship. While our core idempotent batching engine is live, our roadmap to scale to the DAO economy includes:
 
-* **Stage 1: Zero-Knowledge Salary Privacy:** Integrating ZK-circuits (e.g., Light Protocol) to allow companies to prove fair pay on-chain without revealing individual employee salaries.
-* **Stage 2: Smart Escrow:** Conditional PUSD streaming where funds are locked in escrow and released automatically based on GitHub PR merges or off-chain attestations.
+ * **Stage 1: Zero-Knowledge Salary Privacy:** Integrating ZK-circuits (e.g., Light Protocol) to allow companies to prove fair pay on-chain without revealing individual employee salaries.
+ * **Stage 2: Smart Escrow:** Conditional PUSD streaming where funds are locked in escrow and released automatically based on GitHub PR merges or off-chain attestations.
 
 ---
 *Built with precision for the Superteam UAE x Palm USD Global Track.*
