@@ -1,4 +1,4 @@
-# ⚡ Aura-Enterprise
+# ⚡ Aura PUSD Enterprise
 
 **Censorship-Resistant, Mobile-First Batch Payroll for the Solana Ecosystem.**
 
@@ -15,7 +15,7 @@
 
 **The Problem:** Traditional Web3 payroll is a UX nightmare and relies on centralized stablecoins (USDC/USDT) that carry the risk of frozen assets. Furthermore, HR teams face the **"ATA Trap"**: if an employee's wallet hasn't been initialized for a specific token, entire batch transfers fail on-chain, wasting time and network fees.
 
-**The Solution:** Aura-Enterprise abstracts away the blockchain. Upload a CSV, and our Node.js engine dynamically builds a highly optimized, single-signature batch transaction. We built exclusively on **PUSD** to guarantee censorship-resistant pay with a "No Freeze, No Blacklist" architecture.
+**The Solution:** Aura PUSD Enterprise abstracts away the blockchain. Upload a CSV, and our Node.js engine dynamically builds a highly optimized, single-signature batch transaction. We built exclusively on **PUSD** to guarantee censorship-resistant pay with a "No Freeze, No Blacklist" architecture.
 
 ---
 
